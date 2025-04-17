@@ -1,9 +1,18 @@
 services:
-  macos:
-    image: dockurr/macos
-    container_name: macos
+  macos-build:
+    build: .
+    container_name: macos-build
+    privileged: true
+    healthcheck:
+      test: "ls /ready"
     environment:
       VERSION: "13"
+      USERNAME: "steve"
+      PASSWORD: "jobs"
+      DISK_FMT: "qcow2"
+      NETWORK: "Y"
+      DEBUG: "Y"
+      COMMIT: "Y"
     devices:
       - /dev/kvm
       - /dev/net/tun
@@ -13,7 +22,29 @@ services:
       - 8006:8006
       - 5900:5900/tcp
       - 5900:5900/udp
+    restart: always
+    stop_grace_period: 2m
     volumes:
       - ./macos:/storage
+
+  macos-installed:
+    image: $IMAGE_NAME:$IMAGE_VERSION
+    container_name: macos-installed
+    privileged: true
+    healthcheck:
+      test: "ls /ready"
+    environment:
+      VERSION: "13"
+      USERNAME: "steve"
+      PASSWORD: "jobs"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 5900:5900/tcp
+      - 5900:5900/udp
     restart: always
     stop_grace_period: 2m
