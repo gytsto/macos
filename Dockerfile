@@ -28,6 +28,7 @@ RUN set -eu && \
     xxd \
     fdisk \
     mtools \
+    python3 \
     netcat-openbsd && \
     apt-get clean && \
     echo "$VERSION_ARG" > /run/version && \

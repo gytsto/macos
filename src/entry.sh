@@ -36,6 +36,11 @@ term_pd=$!
 
 sleep 30
 
+if ! configure_guest_network_interface; then
+    error "Failed to configure guest network interfaces"
+    exit 666
+fi
+
 if [[ -n "${EXTRA_SCRIPT:-}" ]]; then
     info "Executing extra script: $EXTRA_SCRIPT"
     if ! "$EXTRA_SCRIPT"; then
